@@ -7,11 +7,23 @@ A production-grade Retrieval-Augmented Generation (RAG) Streamlit application fo
 ## 🌟 Key Features
 
 * **📄 Page-Aware PDF Ingestion:** Extracts text page-by-page using `pypdf` and creates sentence-boundary-aware chunks that preserve exact document page ranges.
+
+
 * **⚡ Local & Offline Embeddings:** Generates normalized embeddings locally via `SentenceTransformers` (`all-MiniLM-L6-v2` / `all-MiniLM-L12-v2`) without sending document text to external embedding APIs.
+
+
 * **💾 Persistent Vector Storage:** Uses `ChromaDB` to persist vector indices locally across application restarts, featuring single-document deletion and collection reset controls.
+
+
 * **🔀 Hybrid Retrieval & Dynamic Reranking:** Combines dense cosine similarity with sparse lexical token overlap and technical-term boosting. Dynamically lowers thresholds if context pool yields low results.
+
+
 * **🧠 LLM Context Reranking:** Optional Groq-powered LLM pass to evaluate candidate chunks and select the top 8–12 most relevant context passages before final answer synthesis.
+
+
 * **💬 Transparent Chat Interface:** Provides complete source citations (file names and page numbers), exact chunk score breakdowns (semantic, lexical, combined), and JSON chat export capabilities.
+
+
 
 ---
 
@@ -48,8 +60,8 @@ A production-grade Retrieval-Augmented Generation (RAG) Streamlit application fo
 .
 ├── app.py                 # Main Streamlit RAG application
 ├── requirements.txt       # Python dependency definitions
-├── vibe/                  # Core project modules and source utilities
-├── .gitignore             # Excludes database artifacts and cache folders
+├── venv/                  # Python virtual environment directory
+├── .gitignore             # Excludes database artifacts, cache folders, and venv
 └── README.md              # Project documentation
 
 ```
@@ -62,6 +74,8 @@ A production-grade Retrieval-Augmented Generation (RAG) Streamlit application fo
 
 * Python **3.10+**
 * A **Groq API Key** (Get one at [console.groq.com](https://console.groq.com/?utm_source=gemini))
+
+
 
 ### 1. Clone the Repository
 
@@ -118,24 +132,41 @@ Adjustable directly inside the **⚙️ Configuration** tab:
 
 | Parameter | Default | Description |
 | --- | --- | --- |
-| **Groq Model** | `openai/gpt-oss-20b` | LLM used for reranking and final synthesis. Options include Llama 3.3 70B, Mixtral, Gemma 2, etc. |
-| **Chunk Size** | `1000` chars | Target size for text chunks. |
-| **Chunk Overlap** | `200` chars | Character overlap between consecutive chunks. |
-| **Fetch K** | `120` | Initial candidate pool size retrieved from ChromaDB during semantic search. |
-| **Hybrid Threshold** | `0.65` | Score threshold for hybrid ranking (dynamically drops to `0.55` if context is sparse). |
-| **LLM Rerank** | `Enabled` | Uses Groq to rank and filter retrieved chunks down to the best 8–12 context blocks. |
+| **Groq Model** | `openai/gpt-oss-20b`<br> | LLM used for reranking and final synthesis. Options include `llama-3.1-8b-instant`, `llama-3.3-70b-versatile`, `mixtral-8x7b-32768`, `gemma2-9b-it`, and `llama-4-scout-17b-16e-instruct`.
+
+ |
+| **Chunk Size** | `1000` chars
+
+ | Target size for text chunks.
+
+ |
+| **Chunk Overlap** | `200` chars
+
+ | Character overlap between consecutive chunks.
+
+ |
+| **Fetch K** | `120`<br> | Initial candidate pool size retrieved from ChromaDB during semantic search.
+
+ |
+| **Hybrid Threshold** | `0.65`<br> | Score threshold for hybrid ranking (dynamically drops to `0.55` if context is sparse).
+
+ |
+| **LLM Rerank** | `Enabled`<br> | Uses Groq to rank and filter retrieved chunks down to the best 8–12 context blocks.
+
+ |
 
 ---
 
 ## 🛡️ Data Privacy & Git Security
 
-The local vector database (`chroma_db/`) and compiled bytecode (`__pycache__/`) are intentionally excluded from Git control to keep the repository lightweight and prevent private document embeddings from leaking.
+The local vector database (`chroma_db/`), virtual environment (`venv/`), and compiled bytecode (`__pycache__/`) are intentionally excluded from Git control to keep the repository lightweight and prevent private document embeddings from leaking.
 
 Ensure your `.gitignore` contains:
 
 ```gitignore
 chroma_db/
 __pycache__/
+venv/
 .env
 
 ```
